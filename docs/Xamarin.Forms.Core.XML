@@ -1,0 +1,281 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Xamarin.Forms.Core</name>
+    </assembly>
+    <members>
+        <member name="P:Xamarin.Forms.ActionSheetArguments.Buttons">
+            <summary>
+                Gets titles of any buttons on the action sheet that aren't <see cref="P:Xamarin.Forms.ActionSheetArguments.Cancel" /> or <see cref="P:Xamarin.Forms.ActionSheetArguments.Destruction" />. Can
+                be <c>null</c>.
+            </summary>
+        </member>
+        <member name="P:Xamarin.Forms.ActionSheetArguments.Cancel">
+            <summary>
+                Gets the text for a cancel button. Can be null.
+            </summary>
+        </member>
+        <member name="P:Xamarin.Forms.ActionSheetArguments.Destruction">
+            <summary>
+                Gets the text for a destructive button. Can be null.
+            </summary>
+        </member>
+        <member name="P:Xamarin.Forms.ActionSheetArguments.Title">
+            <summary>
+                Gets the title for the action sheet. Can be null.
+            </summary>
+        </member>
+        <member name="P:Xamarin.Forms.AlertArguments.Accept">
+            <summary>
+                Gets the text for the accept button. Can be null.
+            </summary>
+        </member>
+        <member name="P:Xamarin.Forms.AlertArguments.Cancel">
+            <summary>
+                Gets the text of the cancel button.
+            </summary>
+        </member>
+        <member name="P:Xamarin.Forms.AlertArguments.Message">
+            <summary>
+                Gets the message for the alert. Can be null.
+            </summary>
+        </member>
+        <member name="P:Xamarin.Forms.AlertArguments.Title">
+            <summary>
+                Gets the title for the alert. Can be null.
+            </summary>
+        </member>
+        <member name="F:Xamarin.Forms.PlatformConfiguration.iOSSpecific.BlurEffectStyle.ExtraLight">
+            <summary>
+            Available in iOS 8.0 and later.
+            </summary>
+        </member>
+        <member name="F:Xamarin.Forms.PlatformConfiguration.iOSSpecific.BlurEffectStyle.Light">
+            <summary>
+            Available in iOS 8.0 and later.
+            </summary>
+        </member>
+        <member name="F:Xamarin.Forms.PlatformConfiguration.iOSSpecific.BlurEffectStyle.Dark">
+            <summary>
+            Available in iOS 8.0 and later.
+            </summary>
+        </member>
+        <member name="F:Xamarin.Forms.PlatformConfiguration.WindowsSpecific.ToolbarPlacement.Default">
+            <summary>
+            Default will place the Toolbar at the bottom of the screen on phones and
+            at the top of the screen on larger devices
+            </summary>
+        </member>
+        <member name="F:Xamarin.Forms.PlatformConfiguration.WindowsSpecific.ToolbarPlacement.Top">
+            <summary>
+            Always place the Toolbar at the top of the screen
+            </summary>
+        </member>
+        <member name="F:Xamarin.Forms.PlatformConfiguration.WindowsSpecific.ToolbarPlacement.Bottom">
+            <summary>
+            Always place the Toolbar at the bottom of the screen
+            </summary>
+        </member>
+        <member name="T:Xamarin.Forms.PlatformConfigurationRegistry`1">
+            <summary>
+            Helper that handles storing and lookup of platform specifics implementations
+            </summary>
+            <typeparam name="TElement">The Element type</typeparam>
+        </member>
+        <member name="M:Xamarin.Forms.BindingExpression.Apply(System.Boolean)">
+            <summary>
+                Applies the binding expression to a previously set source and target.
+            </summary>
+        </member>
+        <member name="M:Xamarin.Forms.BindingExpression.Apply(System.Object,Xamarin.Forms.BindableObject,Xamarin.Forms.BindableProperty)">
+            <summary>
+                Applies the binding expression to a new source or target.
+            </summary>
+        </member>
+        <member name="M:Xamarin.Forms.BindingExpression.ApplyCore(System.Object,Xamarin.Forms.BindableObject,Xamarin.Forms.BindableProperty,System.Boolean)">
+            <summary>
+                Applies the binding expression to a previously set source or target.
+            </summary>
+        </member>
+        <member name="M:Xamarin.Forms.TableSectionBase.#ctor">
+            <summary>
+                Constructs a Section without an empty header.
+            </summary>
+        </member>
+        <member name="M:Xamarin.Forms.TableSectionBase.#ctor(System.String)">
+            <summary>
+                Constructs a Section with the specified header.
+            </summary>
+        </member>
+        <member name="F:Xamarin.Forms.ListView._refreshAllowed">
+            <summary>
+                Controls whether anything happens in BeginRefresh(), is set based on RefreshCommand.CanExecute
+            </summary>
+        </member>
+        <member name="M:Xamarin.Forms.TableSectionBase`1.#ctor">
+            <summary>
+                Constructs a Section without an empty header.
+            </summary>
+        </member>
+        <member name="M:Xamarin.Forms.TableSectionBase`1.#ctor(System.String)">
+            <summary>
+                Constructs a Section with the specified header.
+            </summary>
+        </member>
+        <member name="M:Xamarin.Forms.ListProxy.Contains(System.Object)">
+            <summary>
+                Gets whether or not the current window contains the <paramref name="item" />.
+            </summary>
+            <param name="item">The item to search for.</param>
+            <returns><c>true</c> if the item was found in a list or the current window, <c>false</c> otherwise.</returns>
+        </member>
+        <member name="M:Xamarin.Forms.ListProxy.IndexOf(System.Object)">
+            <summary>
+                Gets the index for the <paramref name="item" /> if in a list or the current window.
+            </summary>
+            <param name="item">The item to search for.</param>
+            <returns>The index of the item if in a list or the current window, -1 otherwise.</returns>
+        </member>
+        <member name="P:Cadenza.Collections.OrderedDictionary`2.Comparer">
+            <summary>
+                Gets the equality comparer being used for
+                <typeparam name="TKey" />
+                .
+            </summary>
+        </member>
+        <member name="P:Cadenza.Collections.OrderedDictionary`2.Item(System.Int32)">
+            <summary>
+                Gets the value at the specified index.
+            </summary>
+            <param name="index">The index to get the value at.</param>
+            <returns>The value at the specified index.</returns>
+            <exception cref="T:System.IndexOutOfRangeException">
+                <paramref name="index" /> is less than 0 or greater than
+                <see cref="P:Cadenza.Collections.OrderedDictionary`2.Count" />.
+            </exception>
+        </member>
+        <member name="M:Cadenza.Collections.OrderedDictionary`2.Clear">
+            <summary>
+                Clears the dictionary.
+            </summary>
+        </member>
+        <member name="P:Cadenza.Collections.OrderedDictionary`2.Count">
+            <summary>
+                Gets the number of items in the dictionary.
+            </summary>
+        </member>
+        <member name="M:Cadenza.Collections.OrderedDictionary`2.Add(`0,`1)">
+            <summary>
+                Adds the <paramref name="key" /> and <paramref name="value" /> to the dictionary.
+            </summary>
+            <param name="key">The key to associate with the <paramref name="value" />.</param>
+            <param name="value">The value to add.</param>
+            <exception cref="T:System.ArgumentNullException"><paramref name="key" /> is <c>null</c>.</exception>
+            <exception cref="T:System.ArgumentException"><paramref name="key" /> already exists in the dictionary.</exception>
+        </member>
+        <member name="M:Cadenza.Collections.OrderedDictionary`2.ContainsKey(`0)">
+            <summary>
+                Gets whether or not <paramref name="key" /> is in the dictionary.
+            </summary>
+            <param name="key">The key to look for.</param>
+            <returns><c>true</c> if the key was found, <c>false</c> if not.</returns>
+            <exception cref="T:System.ArgumentNullException">If <paramref name="key" /> is <c>null</c>.</exception>
+        </member>
+        <member name="P:Cadenza.Collections.OrderedDictionary`2.Item(`0)">
+            <summary>
+                Gets or sets the value associated with <paramref name="key" />.
+            </summary>
+            <param name="key">The key to get or set the value for.</param>
+            <returns>The value associated with the key.</returns>
+            <exception cref="T:System.Collections.Generic.KeyNotFoundException"><paramref name="key" /> was not found attempting to get.</exception>
+        </member>
+        <member name="P:Cadenza.Collections.OrderedDictionary`2.Keys">
+            <summary>
+                Gets a read only collection of keys in the dictionary.
+            </summary>
+        </member>
+        <member name="M:Cadenza.Collections.OrderedDictionary`2.Remove(`0)">
+            <summary>
+                Removes the key and associated value from the dictionary if found.
+            </summary>
+            <param name="key">The key to remove.</param>
+            <returns><c>true</c> if the key was found, <c>false</c> if not.</returns>
+            <exception cref="T:System.ArgumentNullException"><paramref name="key" /> is <c>null</c>.</exception>
+        </member>
+        <member name="M:Cadenza.Collections.OrderedDictionary`2.TryGetValue(`0,`1@)">
+            <summary>
+                Attempts to get the <paramref name="value" /> for the <paramref name="key" />.
+            </summary>
+            <param name="key">The key to search for.</param>
+            <param name="value">The value, if found.</param>
+            <returns><c>true</c> if the key was found, <c>false</c> otherwise.</returns>
+            <exception cref="T:System.ArgumentNullException">If <paramref name="key" /> is <c>null</c>.</exception>
+        </member>
+        <member name="P:Cadenza.Collections.OrderedDictionary`2.Values">
+            <summary>
+                Gets a read only collection of values in the dictionary.
+            </summary>
+        </member>
+        <member name="M:Cadenza.Collections.OrderedDictionary`2.RemoveAt(System.Int32)">
+            <summary>
+                Removes they key and associated value from the dictionary located at <paramref name="index" />.
+            </summary>
+            <param name="index">The index at which to remove an item.</param>
+        </member>
+        <member name="M:Cadenza.Collections.OrderedDictionary`2.ContainsValue(`1)">
+            <summary>
+                Gets whether or not <paramref name="value" /> is in the dictionary.
+            </summary>
+            <param name="value">The value to look for.</param>
+            <returns><c>true</c> if the value was found, <c>false</c> if not.</returns>
+        </member>
+        <member name="M:Cadenza.Collections.OrderedDictionary`2.IndexOf(`0)">
+            <summary>
+                Gets the index of <paramref name="key" />.
+            </summary>
+            <param name="key">The key to find the index of.</param>
+            <returns>-1 if the key was not found, the index otherwise.</returns>
+            <exception cref="T:System.ArgumentNullException"><paramref name="key" /> is <c>null</c>.</exception>
+        </member>
+        <member name="M:Cadenza.Collections.OrderedDictionary`2.IndexOf(`0,System.Int32)">
+            <summary>
+                Gets the index of <paramref name="key" /> starting with <paramref name="startIndex" />.
+            </summary>
+            <param name="key">The key to find the index of.</param>
+            <param name="startIndex">The index to start the search at.</param>
+            <returns>-1 if the key was not found, the index otherwise.</returns>
+            <exception cref="T:System.ArgumentNullException"><paramref name="key" /> is <c>null</c>.</exception>
+            <exception cref="T:System.ArgumentOutOfRangeException"><paramref name="startIndex" /> is not within the valid range of indexes.</exception>
+        </member>
+        <member name="M:Cadenza.Collections.OrderedDictionary`2.IndexOf(`0,System.Int32,System.Int32)">
+            <summary>
+                Gets the index of <paramref name="key" /> between the range given by <paramref name="startIndex" /> and
+                <paramref name="count" />.
+            </summary>
+            <param name="key">The key to find the index of.</param>
+            <param name="startIndex">The index to start the search at.</param>
+            <param name="count">How many items to search, including the <paramref name="startIndex" />.</param>
+            <returns>-1 if the key was not found, the index otherwise.</returns>
+            <exception cref="T:System.ArgumentNullException"><paramref name="key" /> is <c>null</c>.</exception>
+            <exception cref="T:System.ArgumentOutOfRangeException"><paramref name="startIndex" /> is not within the valid range of indexes.</exception>
+            <exception cref="T:System.ArgumentOutOfRangeException">
+                <paramref name="startIndex" /> and <paramref name="count" /> are not a
+                valid range.
+            </exception>
+            <exception cref="T:System.ArgumentOutOfRangeException"><paramref name="count" /> is less than 0.</exception>
+        </member>
+        <member name="M:Cadenza.Collections.OrderedDictionary`2.Insert(System.Int32,`0,`1)">
+            <summary>
+                Inserts the <paramref name="key" /> and <paramref name="value" /> at the specified index.
+            </summary>
+            <param name="index">The index to insert the key and value at.</param>
+            <param name="key">The key to assicate with the <paramref name="value" />.</param>
+            <param name="value">The value to insert.</param>
+            <exception cref="T:System.ArgumentNullException"><paramref name="key" /> is <c>null</c>.</exception>
+            <exception cref="T:System.ArgumentOutOfRangeException">
+                <paramref name="index" /> is less than 0 or greater than
+                <see cref="P:Cadenza.Collections.OrderedDictionary`2.Count" />
+            </exception>
+        </member>
+    </members>
+</doc>
