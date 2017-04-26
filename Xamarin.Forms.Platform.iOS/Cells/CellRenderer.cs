@@ -50,7 +50,7 @@ namespace Xamarin.Forms.Platform.iOS
 
 			_onForceUpdateSizeRequested = (sender, e) => 
 			{
-				var index = tableView.IndexPathForCell(nativeCell);
+				var index = tableView.IndexPathForCell(nativeCell) ?? (sender as Cell)?.GetIndexPath();
 				if (index != null)
 					tableView.ReloadRows(new[] { index }, UITableViewRowAnimation.None);
 			};
