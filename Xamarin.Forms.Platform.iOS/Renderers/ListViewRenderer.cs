@@ -130,16 +130,14 @@ namespace Xamarin.Forms.Platform.iOS
 			{
 				if (_headerRenderer != null)
 				{
-					var platform = _headerRenderer.Element.Platform as Platform;
-					if (platform != null)
-						platform.DisposeModelAndChildrenRenderers(_headerRenderer.Element);
+					var platform = _headerRenderer.Element?.Platform as Platform;
+					platform?.DisposeModelAndChildrenRenderers(_headerRenderer.Element);
 					_headerRenderer = null;
 				}
 				if (_footerRenderer != null)
 				{
-					var platform = _footerRenderer.Element.Platform as Platform;
-					if (platform != null)
-						platform.DisposeModelAndChildrenRenderers(_footerRenderer.Element);
+					var platform = _footerRenderer.Element?.Platform as Platform;
+					platform?.DisposeModelAndChildrenRenderers(_footerRenderer.Element);
 					_footerRenderer = null;
 				}
 
