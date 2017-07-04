@@ -9,7 +9,7 @@ namespace Xamarin.Forms.Platform.iOS
 		internal static NSIndexPath GetIndexPath(this Cell self)
 		{
 			if (self == null)
-				throw new ArgumentNullException("self");
+				throw new ArgumentNullException(nameof(self));
 
 			NSIndexPath path;
 
@@ -28,6 +28,8 @@ namespace Xamarin.Forms.Platform.iOS
 				var tmPath = self.GetPath();
 				path = NSIndexPath.FromRowSection(tmPath.Item2, tmPath.Item1);
 			}
+			else if (self.RealParent == null)
+				return null;
 			else
 				throw new NotSupportedException("Unknown cell parent type");
 

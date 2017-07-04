@@ -310,12 +310,12 @@ namespace Xamarin.Forms.Platform.iOS
 			{
 				var actionSheet = new MoreActionSheetController();
 
-				for (var i = 0; i < _cell.ContextActions.Count; i++)
+				for (var i = 0; i < _cell?.ContextActions.Count; i++)
 				{
 					if (displayed.Contains(i))
 						continue;
 
-					var item = _cell.ContextActions[i];
+					var item = _cell?.ContextActions[i];
 					var weakItem = new WeakReference<MenuItem>(item);
 					var action = UIAlertAction.Create(item.Text, UIAlertActionStyle.Default, a =>
 					{
@@ -350,12 +350,12 @@ namespace Xamarin.Forms.Platform.iOS
 
 				var actionSheet = new UIActionSheet(null, (IUIActionSheetDelegate)d);
 
-				for (var i = 0; i < _cell.ContextActions.Count; i++)
+				for (var i = 0; i < _cell?.ContextActions.Count; i++)
 				{
 					if (displayed.Contains(i))
 						continue;
 
-					var item = _cell.ContextActions[i];
+					var item = _cell?.ContextActions[i];
 					d.Items.Add(item);
 					actionSheet.AddButton(item.Text);
 				}
@@ -383,7 +383,7 @@ namespace Xamarin.Forms.Platform.iOS
 					largestButtonWidth = GetLargestWidth();
 			}
 
-			if (needMoreButton && _cell.ContextActions.Count - _buttons.Count == 1)
+			if (needMoreButton && _cell?.ContextActions.Count - _buttons.Count == 1)
 				_buttons.RemoveAt(_buttons.Count - 1);
 		}
 
@@ -407,7 +407,7 @@ namespace Xamarin.Forms.Platform.iOS
 		UIViewController GetController()
 		{
 			Element e = _cell;
-			while (e.RealParent != null)
+			while (e?.RealParent != null)
 			{
 				var renderer = Platform.GetRenderer((VisualElement)e.RealParent);
 				if (renderer.ViewController != null)
@@ -448,7 +448,7 @@ namespace Xamarin.Forms.Platform.iOS
 		{
 			if (e.PropertyName == "HasContextActions")
 			{
-				var parentListView = _cell.RealParent as IListViewController;
+				var parentListView = _cell?.RealParent as IListViewController;
 				var recycling = parentListView != null && parentListView.CachingStrategy == ListViewCachingStrategy.RecycleElement;
 				if (!recycling)
 					ReloadRow();
@@ -457,7 +457,7 @@ namespace Xamarin.Forms.Platform.iOS
 
 		void OnContextItemsChanged(object sender, NotifyCollectionChangedEventArgs e)
 		{
-			var parentListView = _cell.RealParent as IListViewController;
+			var parentListView = _cell?.RealParent as IListViewController;
 			var recycling = parentListView != null && parentListView.CachingStrategy == ListViewCachingStrategy.RecycleElement;
 			if (recycling)
 				Update(_tableView, _cell, ContentCell);
@@ -468,7 +468,7 @@ namespace Xamarin.Forms.Platform.iOS
 
 		void OnMenuItemPropertyChanged(object sender, PropertyChangedEventArgs e)
 		{
-			var parentListView = _cell.RealParent as IListViewController;
+			var parentListView = _cell?.RealParent as IListViewController;
 			var recycling = parentListView != null && parentListView.CachingStrategy == ListViewCachingStrategy.RecycleElement;
 			if (recycling)
 				Update(_tableView, _cell, ContentCell);
@@ -478,7 +478,7 @@ namespace Xamarin.Forms.Platform.iOS
 
 		void ReloadRow()
 		{
-			if (_scroller.ContentOffset.X > 0)
+			if (_scroller != null && _scroller.ContentOffset.X > 0)
 			{
 				((ContextScrollViewDelegate)_scroller.Delegate).ClosedCallback = () =>
 				{
@@ -494,7 +494,7 @@ namespace Xamarin.Forms.Platform.iOS
 
 		void ReloadRowCore()
 		{
-			if (_cell.RealParent == null)
+			if (_cell?.RealParent == null)
 				return;
 
 			var path = _cell.GetIndexPath();
@@ -514,6 +514,9 @@ namespace Xamarin.Forms.Platform.iOS
 		{
 			MenuItem destructive = null;
 			nfloat largestWidth = 0, acceptableSize = width * 0.80f;
+
+			if (_cell == null)
+				throw new InvalidOperationException("Cannot setup buttons for null cell.");
 
 			for (var i = 0; i < _cell.ContextActions.Count; i++)
 			{
@@ -591,7 +594,7 @@ namespace Xamarin.Forms.Platform.iOS
 			{
 				var b = _buttons[n];
 
-				if (b.Tag >= 0)
+				if (b.Tag >= 0 && _cell != null)
 				{
 					var item = _cell.ContextActions[(int)b.Tag];
 					item.PropertyChanged += handler;

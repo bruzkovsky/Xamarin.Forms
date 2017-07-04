@@ -81,7 +81,7 @@ namespace Xamarin.Forms.Platform.iOS
 				SetButtonsShowing(true);
 
 			var cell = GetContextCell(scrollView);
-			if (!cell.Selected)
+			if (cell == null || !cell.Selected)
 				return;
 
 			if (!IsOpen)
@@ -180,7 +180,7 @@ namespace Xamarin.Forms.Platform.iOS
 
 							_closer = new UITapGestureRecognizer(close);
 							var cell = GetContextCell(scrollView);
-							cell.ContentCell.AddGestureRecognizer(_closer);
+							cell?.ContentCell.AddGestureRecognizer(_closer);
 						}
 					}
 				}
@@ -203,7 +203,7 @@ namespace Xamarin.Forms.Platform.iOS
 				return false;
 
 			UIScrollView scrollViewBeingScrolled;
-			if (!s_scrollViewBeingScrolled.TryGetTarget(out scrollViewBeingScrolled) || ReferenceEquals(scrollViewBeingScrolled, scrollView) || !ReferenceEquals(((ContextScrollViewDelegate)scrollViewBeingScrolled.Delegate)._table, ((ContextScrollViewDelegate)scrollView.Delegate)._table))
+			if (!s_scrollViewBeingScrolled.TryGetTarget(out scrollViewBeingScrolled) || ReferenceEquals(scrollViewBeingScrolled, scrollView) || !ReferenceEquals(((ContextScrollViewDelegate)scrollViewBeingScrolled.Delegate)?._table, ((ContextScrollViewDelegate)scrollView.Delegate)?._table))
 				return false;
 
 			scrollView.SetContentOffset(new PointF(0, 0), false);
@@ -233,11 +233,11 @@ namespace Xamarin.Forms.Platform.iOS
 
 		void ClearCloserRecognizer(UIScrollView scrollView)
 		{
-			if (_globalCloser == null || _globalCloser.State == UIGestureRecognizerState.Cancelled)
+			if (_globalCloser == null || _globalCloser.State == UIGestureRecognizerState.Cancelled || scrollView == null)
 				return;
 
 			var cell = GetContextCell(scrollView);
-			cell.ContentCell.RemoveGestureRecognizer(_closer);
+			cell?.ContentCell.RemoveGestureRecognizer(_closer);
 			_closer.Dispose();
 			_closer = null;
 
@@ -249,7 +249,10 @@ namespace Xamarin.Forms.Platform.iOS
 
 		ContextActionsCell GetContextCell(UIScrollView scrollView)
 		{
-			var view = scrollView.Superview.Superview;
+			var view = scrollView?.Superview?.Superview;
+			if (view == null)
+				return null;
+
 			var cell = view as ContextActionsCell;
 			while (view.Superview != null)
 			{
@@ -265,7 +268,10 @@ namespace Xamarin.Forms.Platform.iOS
 
 		void RemoveHighlight(UIScrollView scrollView)
 		{
-			var subviews = scrollView.Superview.Superview.Subviews;
+			var subviews = scrollView.Superview?.Superview?.Subviews;
+
+			if (subviews == null)
+				return;
 
 			var count = 0;
 			for (var i = 0; i < subviews.Length; i++)
@@ -282,19 +288,23 @@ namespace Xamarin.Forms.Platform.iOS
 			_backgroundView.RemoveFromSuperview();
 
 			var cell = GetContextCell(scrollView);
-			cell.SelectionStyle = UITableViewCellSelectionStyle.None;
+			if (cell != null)
+				cell.SelectionStyle = UITableViewCellSelectionStyle.None;
 		}
 
 		void RestoreHighlight(UIScrollView scrollView)
 		{
-			if (_backgroundView == null)
+			if (_backgroundView == null || scrollView == null)
 				return;
 
 			var cell = GetContextCell(scrollView);
-			cell.SelectionStyle = UITableViewCellSelectionStyle.Default;
-			cell.SetSelected(true, false);
+			if (cell != null)
+			{
+				cell.SelectionStyle = UITableViewCellSelectionStyle.Default;
+				cell.SetSelected(true, false);
+			}
 
-			scrollView.Superview.Superview.InsertSubview(_backgroundView, 0);
+			scrollView.Superview?.Superview?.InsertSubview(_backgroundView, 0);
 			_backgroundView = null;
 		}
 
