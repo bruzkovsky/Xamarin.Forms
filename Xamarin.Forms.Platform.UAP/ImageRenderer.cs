@@ -14,6 +14,21 @@ namespace Xamarin.Forms.Platform.UWP
 		public ImageRenderer() : base()
 		{
 			ImageElementManager.Init(this);
+			Windows.UI.Xaml.Application.Current.Resuming += OnResumingAsync;
+		}
+
+		async void OnResumingAsync(object sender, object e)
+		{
+			try
+			{
+				await ImageElementManager.UpdateSource(this);
+			}
+			catch (Exception exception)
+			{
+				Log.Warning("Update image source after app resume", 
+					$"ImageSource failed to update after app resume: {exception.Message}");
+
+			}
 		}
 
 		bool IImageVisualElementRenderer.IsDisposed => _disposed;
@@ -44,6 +59,7 @@ namespace Xamarin.Forms.Platform.UWP
 				{
 					Control.ImageOpened -= OnImageOpened;
 					Control.ImageFailed -= OnImageFailed;
+					Windows.UI.Xaml.Application.Current.Resuming -= OnResumingAsync;
 				}
 			}
 
