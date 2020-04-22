@@ -51,7 +51,10 @@ namespace Xamarin.Forms.Platform.UWP
 
 			Tracker = null;
 			if (Element != null)
+			{
+				Element.SendDisappearing();
 				SetElement(null);
+			}
 		}
 
 		WBrush ITitleProvider.BarBackgroundBrush
