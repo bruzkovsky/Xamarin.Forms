@@ -38,6 +38,9 @@ namespace Xamarin.Forms.Platform.UWP
 					}
 					Element?.SendDisappearing();
 				}
+				Element?.SendDisappearing();
+				Unloaded -= OnUnloaded;
+				Loaded -= OnLoaded;
 			}
 
 			base.Dispose(disposing);
@@ -53,6 +56,7 @@ namespace Xamarin.Forms.Platform.UWP
 			{
 				if (e.OldElement == null)
 				{
+					Loaded -= OnLoaded;
 					Loaded += OnLoaded;
 					Tracker = new BackgroundTracker<FrameworkElement>(BackgroundProperty);
 				}
@@ -75,6 +79,7 @@ namespace Xamarin.Forms.Platform.UWP
 				return;
 			}
 			_loaded = true;
+			Unloaded -= OnUnloaded;
 			Unloaded += OnUnloaded;
 			Element?.SendAppearing();
 		}
