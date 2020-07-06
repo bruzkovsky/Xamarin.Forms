@@ -18,17 +18,17 @@ PowerShell:
 //////////////////////////////////////////////////////////////////////
 // ADDINS
 //////////////////////////////////////////////////////////////////////
-#addin "nuget:?package=Cake.Xamarin&version=3.0.0"
-#addin "nuget:?package=Cake.Android.Adb&version=3.0.0"
-#addin "nuget:?package=Cake.Git&version=0.19.0"
+#addin "nuget:?package=Cake.Xamarin&version=3.0.2"
+#addin "nuget:?package=Cake.Android.Adb&version=3.2.0"
+#addin "nuget:?package=Cake.Git&version=0.21.0"
 #addin "nuget:?package=Cake.Android.SdkManager&version=3.0.2"
-#addin "nuget:?package=Cake.Boots&version=1.0.0.291"
+#addin "nuget:?package=Cake.Boots&version=1.0.2.421"
 
-#addin "nuget:?package=Cake.FileHelpers&version=3.2.0"
+#addin "nuget:?package=Cake.FileHelpers&version=3.2.1"
 //////////////////////////////////////////////////////////////////////
 // TOOLS
 //////////////////////////////////////////////////////////////////////
-#tool nuget:?package=NUnit.ConsoleRunner&version=3.4.0
+#tool nuget:?package=NUnit.ConsoleRunner&version=3.11.1
 
 //////////////////////////////////////////////////////////////////////
 // ARGUMENTS
@@ -36,6 +36,7 @@ PowerShell:
 
 var target = Argument("target", "Default");
 var configuration = Argument("configuration", "Debug");
+var packageVersion = Argument("packageVersion", "");
 
 var ANDROID_HOME = EnvironmentVariable ("ANDROID_HOME") ??
     (IsRunningOnWindows () ? "C:\\Program Files (x86)\\Android\\android-sdk\\" : "");
@@ -171,9 +172,17 @@ Task("_NuGetPack")
     .Description("Create Nugets without building anything")
     .Does(() =>
     {
-        var nugetVersionFile = 
-            GetFiles(".XamarinFormsVersionFile.txt");
-        var nugetversion = FileReadText(nugetVersionFile.First());
+        var nugetversion = String.Empty;
+
+        if(!String.IsNullOrWhiteSpace(packageVersion))
+        {
+            nugetversion = packageVersion;
+        }
+        else
+        {
+            var nugetVersionFile = GetFiles(".XamarinFormsVersionFile.txt");
+            nugetversion = FileReadText(nugetVersionFile.First());
+        }
 
         Information("Nuget Version: {0}", nugetversion);
 
