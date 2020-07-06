@@ -78,6 +78,22 @@ namespace Xamarin.Forms.Platform.iOS
 			throw new InvalidOperationException("InsertPageBefore is not supported globally on iOS, please use a NavigationPage.");
 		}
 
+		public async void InsertModalBefore(Page modal, Page before)
+		{
+			EndEditing();
+
+			var index = _modals.IndexOf(before);
+			_modals.Insert(index, modal);
+
+#pragma warning disable CS0618 // Type or member is obsolete
+			// The Platform property is no longer necessary, but we have to set it because some third-party
+			// library might still be retrieving it and using it
+			modal.Platform = this;
+#pragma warning restore CS0618 // Type or member is obsolete
+
+			await InsertModal(modal, before);
+		}
+
 		IReadOnlyList<Page> INavigation.ModalStack
 		{
 			get { return _modals; }
@@ -469,6 +485,24 @@ namespace Xamarin.Forms.Platform.iOS
 
 			await _renderer.PresentViewControllerAsync(wrapper, animated);
 			await Task.Delay(5);
+		}
+
+		async Task InsertModal(Page modal, Page before)
+		{
+			var modalRenderer = GetRenderer(modal);
+			if (modalRenderer == null)
+			{
+				modalRenderer = CreateRenderer(modal);
+				SetRenderer(modal, modalRenderer);
+			}
+
+			var wrapper = new ModalWrapper(modalRenderer);
+
+			if (GetRenderer(before) is UIViewController controller)
+			{
+				await controller.PresentViewControllerAsync(wrapper, false);
+				await Task.Delay(5);
+			}
 		}
 
 		void EndEditing()

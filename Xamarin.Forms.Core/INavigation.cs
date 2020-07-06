@@ -10,6 +10,7 @@ namespace Xamarin.Forms
 		IReadOnlyList<Page> NavigationStack { get; }
 
 		void InsertPageBefore(Page page, Page before);
+		void InsertModalBefore(Page modal, Page before);
 		Task<Page> PopAsync();
 		Task<Page> PopAsync(bool animated);
 		Task<Page> PopModalAsync();

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
@@ -15,7 +16,10 @@ namespace Xamarin.Forms.Core.UnitTests
 			public Page LastPushedModal { get; set; }
 
 			public bool Popped { get; set; }
+
 			public bool PoppedModal { get; set; }
+
+			public bool InsertedModal { get; set; }
 
 			public Task PushAsync (Page root)
 			{
@@ -77,6 +81,11 @@ namespace Xamarin.Forms.Core.UnitTests
 
 			public void InsertPageBefore (Page page, Page before)
 			{
+			}
+
+			public void InsertModalBefore(Page modal, Page before)
+			{
+				InsertedModal = true;
 			}
 
 			public System.Collections.Generic.IReadOnlyList<Page> NavigationStack
@@ -183,6 +192,55 @@ namespace Xamarin.Forms.Core.UnitTests
 
 			await proxy.PopModalAsync ();
 			Assert.True (inner.PoppedModal, "Pop was never called on the inner proxy item");
+		}
+
+		[Test]
+		public void WhenInsertingModal_AndPageIsFound_ThenInsertsModalBeforeThePage()
+		{
+			var proxy = new NavigationProxy();
+
+			var modal1 = new ContentPage { Content = new View() };
+			proxy.PushModalAsync(modal1);
+			var modal2 = new ContentPage { Content = new View() };
+			proxy.PushModalAsync(modal2);
+			var modal3 = new ContentPage { Content = new View() };
+			proxy.PushModalAsync(modal3);
+
+			var inserted1 = new ContentPage { Content = new View() };
+			proxy.InsertModalBefore(inserted1, modal1);
+			var inserted2 = new ContentPage { Content = new View() };
+			proxy.InsertModalBefore(inserted2, modal2);
+			var inserted3 = new ContentPage { Content = new View() };
+			proxy.InsertModalBefore(inserted3, modal3);
+
+			CollectionAssert.AreEqual(new[] { inserted1, modal1, inserted2, modal2, inserted3, modal3 }, proxy.ModalStack);
+		}
+
+		[Test]
+		public void WhenInsertingModal_AndPageIsNotFound_ThenThrowsArgumentException()
+		{
+			var proxy = new NavigationProxy();
+
+			var notFoundPage = new ContentPage { Content = new View() };
+			var child = new ContentPage { Content = new View() };
+			Assert.Throws<ArgumentException>(() => proxy.InsertModalBefore(child, notFoundPage));
+		}
+
+		[Test]
+		public void WhenInsertingModal_AndInnerIsSet_ThenCallsTheInnerNavigationToo()
+		{
+			var proxy = new NavigationProxy();
+			var inner = new NavigationTest();
+
+			proxy.Inner = inner;
+
+			var topModal = new ContentPage { Content = new View() };
+			proxy.PushModalAsync(topModal);
+
+			var child = new ContentPage { Content = new View() };
+			proxy.InsertModalBefore(child, topModal);
+
+			Assert.True(inner.InsertedModal, "Insert was never called on the inner proxy item");
 		}
 	}
 }

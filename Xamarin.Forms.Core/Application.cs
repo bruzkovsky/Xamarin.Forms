@@ -405,6 +405,13 @@ namespace Xamarin.Forms
 
 				_owner.OnModalPushed(modal);
 			}
+
+			protected override void OnInsertModalBefore(Page modal, Page before)
+			{
+				modal.Parent = _owner;
+				modal.NavigationProxy.Inner = this;
+				base.OnInsertModalBefore(modal, before);
+			}
 		}
 	}
 }

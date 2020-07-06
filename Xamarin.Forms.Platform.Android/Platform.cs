@@ -201,6 +201,11 @@ namespace Xamarin.Forms.Platform.Android
 			throw new InvalidOperationException("InsertPageBefore is not supported globally on Android, please use a NavigationPage.");
 		}
 
+		public void InsertModalBefore(Page modal, Page before)
+		{
+			throw new NotImplementedException();
+		}
+
 		IReadOnlyList<Page> INavigation.ModalStack => _navModel.Modals.ToList();
 
 		IReadOnlyList<Page> INavigation.NavigationStack => new List<Page>();

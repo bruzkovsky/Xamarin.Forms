@@ -301,5 +301,32 @@ namespace Xamarin.Forms.Core.UnitTests
 
 			Assert.AreEqual (modal1, navModel.PopTopPage ());
 		}
+
+		[Test]
+		public void WhenInsertingModal_ThenUpdatesModalStackAndTree()
+		{
+			var navModel = new NavigationModel();
+
+			var originalModal = new ContentPage();
+			var insertedModal = new ContentPage();
+			navModel.PushModal(originalModal);
+			navModel.InsertModalBefore(insertedModal, originalModal);
+
+			CollectionAssert.AreEqual(new[]{insertedModal, originalModal}, navModel.Modals);
+			var sub1 = navModel.Tree[0];
+			Assert.AreEqual(insertedModal, sub1.Single());
+			var sub2 = navModel.Tree[1];
+			Assert.AreEqual(originalModal, sub2.Single());
+		}
+
+		[Test]
+		public void WhenInsertingModal_AndBeforeIsNotFound_ThenThrowsArgumentException()
+		{
+			var navModel = new NavigationModel();
+
+			var notFoundModal = new ContentPage();
+			var insertedModal = new ContentPage();
+			Assert.Throws<ArgumentException>(() => navModel.InsertModalBefore(insertedModal, notFoundModal));
+		}
 	}
 }

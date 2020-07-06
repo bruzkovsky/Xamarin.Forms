@@ -59,6 +59,25 @@ namespace Xamarin.Forms.Internals
 			currentStack.Insert(index, page);
 		}
 
+		public int InsertModalBefore(Page modal, Page before)
+		{
+			int index = _modalStack.IndexOf(before);
+
+			if (index == -1)
+				throw new ArgumentException("before must be in the current navigation context", nameof(before));
+
+			_modalStack.Insert(index, modal);
+
+			index = _navTree.IndexOf(x => x.First() == before);
+			
+			if (index == -1)
+				throw new InvalidOperationException("before is not present in the current navigation tree");
+
+			_navTree.Insert(index, new List<Page> { modal });
+
+			return index;
+		}
+
 		public Page Pop(Page ancestralNav)
 		{
 			ancestralNav = ancestralNav.AncestorToRoot();

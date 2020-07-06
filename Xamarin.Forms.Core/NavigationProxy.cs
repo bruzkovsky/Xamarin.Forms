@@ -65,6 +65,11 @@ namespace Xamarin.Forms.Internals
 			OnInsertPageBefore(page, before);
 		}
 
+		public void InsertModalBefore(Page modal, Page before)
+		{
+			OnInsertModalBefore(modal, before);
+		}
+
 		public IReadOnlyList<Page> ModalStack
 		{
 			get { return GetModalStack(); }
@@ -159,6 +164,22 @@ namespace Xamarin.Forms.Internals
 			else
 			{
 				currentInner.InsertPageBefore(page, before);
+			}
+		}
+
+		protected virtual void OnInsertModalBefore(Page modal, Page before)
+		{
+			INavigation currentInner = Inner;
+			if (currentInner == null)
+			{
+				int index = _modalStack.Value.IndexOf(before);
+				if (index == -1)
+					throw new ArgumentException("before must be in the modal stack of the current context");
+				_modalStack.Value.Insert(index, modal);
+			}
+			else
+			{
+				currentInner.InsertModalBefore(modal, before);
 			}
 		}
 

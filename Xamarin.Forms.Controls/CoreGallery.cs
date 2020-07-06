@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Xamarin.Forms.Controls.ControlGalleryPages;
 using Xamarin.Forms.Controls.GalleryPages;
 using Xamarin.Forms.Controls.GalleryPages.CollectionViewGalleries;
 using Xamarin.Forms.CustomAttributes;
@@ -363,6 +364,7 @@ namespace Xamarin.Forms.Controls
 				new GalleryPageFactory(() => new WebViewCoreGalleryPage(), "WebView Gallery"),
 				new GalleryPageFactory(() => new WkWebViewCoreGalleryPage(), "WkWebView Gallery"),
 				new GalleryPageFactory(() => new DynamicViewGallery(), "Dynamic ViewGallery"),
+				new GalleryPageFactory(() => new InsertModalBeforeGalleryPage(), "Insert Modal before Gallery"),
 				//pages
  				new GalleryPageFactory(() => new RootContentPage ("Content"), "RootPages Gallery"),
 				new GalleryPageFactory(() => new MasterDetailPageTabletPage(), "MasterDetailPage Tablet Page"),

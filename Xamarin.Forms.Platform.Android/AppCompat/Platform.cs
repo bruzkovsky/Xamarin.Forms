@@ -66,6 +66,19 @@ namespace Xamarin.Forms.Platform.Android.AppCompat
 			throw new InvalidOperationException("InsertPageBefore is not supported globally on Android, please use a NavigationPage.");
 		}
 
+		public void InsertModalBefore(Page modal, Page before)
+		{
+			_navModel.InsertModalBefore(modal, before);
+
+#pragma warning disable CS0618 // Type or member is obsolete
+			// The Platform property is no longer necessary, but we have to set it because some third-party
+			// library might still be retrieving it and using it
+			modal.Platform = this;
+#pragma warning restore CS0618 // Type or member is obsolete
+
+			InsertModal(modal, before);
+		}
+
 		IReadOnlyList<Page> INavigation.ModalStack => _navModel.Modals.ToList();
 
 		IReadOnlyList<Page> INavigation.NavigationStack => new List<Page>();
@@ -382,6 +395,13 @@ namespace Xamarin.Forms.Platform.Android.AppCompat
 		void LayoutRootPage(Page page, int width, int height)
 		{
 			page.Layout(new Rectangle(0, 0, _context.FromPixels(width), _context.FromPixels(height)));
+		}
+
+		void InsertModal(Page modal, Page before)
+		{
+			var modalContainer = new ModalContainer(_context, modal);
+			var index = _navModel.Modals.IndexOf(before);
+			_renderer.AddView(modalContainer, index);
 		}
 
 		Task PresentModal(Page modal, bool animated)
