@@ -82,9 +82,6 @@ namespace Xamarin.Forms.Platform.iOS
 		{
 			EndEditing();
 
-			var index = _modals.IndexOf(before);
-			_modals.Insert(index, modal);
-
 #pragma warning disable CS0618 // Type or member is obsolete
 			// The Platform property is no longer necessary, but we have to set it because some third-party
 			// library might still be retrieving it and using it
@@ -92,6 +89,9 @@ namespace Xamarin.Forms.Platform.iOS
 #pragma warning restore CS0618 // Type or member is obsolete
 
 			await InsertModal(modal, before);
+
+			var index = _modals.IndexOf(before);
+			_modals.Insert(index, modal);
 		}
 
 		IReadOnlyList<Page> INavigation.ModalStack
@@ -489,6 +489,8 @@ namespace Xamarin.Forms.Platform.iOS
 
 		async Task InsertModal(Page modal, Page before)
 		{
+			PrintWindowHierarchy();
+
 			var modalRenderer = GetRenderer(modal);
 			if (modalRenderer == null)
 			{
@@ -498,10 +500,31 @@ namespace Xamarin.Forms.Platform.iOS
 
 			var wrapper = new ModalWrapper(modalRenderer);
 
-			if (GetRenderer(before) is UIViewController controller)
+			var index = _modals.IndexOf(before);
+
+			var parent = index == 0 ? _renderer : (UIViewController)GetRenderer(_modals[index - 1]);
+			await parent.PresentViewControllerAsync(wrapper, false);
+			await Task.Delay(5);
+		}
+
+		void PrintWindowHierarchy()
+		{
+			var ctrl = UIApplication.SharedApplication.KeyWindow.RootViewController;
+
+			foreach (var view in Traverse(ctrl, c => c.ChildViewControllers))
+				System.Diagnostics.Debug.WriteLine(view);
+		}
+
+		static IEnumerable<T> Traverse<T>(T item, Func<T, IEnumerable<T>> childSelector)
+		{
+			var stack = new Stack<T>();
+			stack.Push(item);
+			while (stack.Any())
 			{
-				await controller.PresentViewControllerAsync(wrapper, false);
-				await Task.Delay(5);
+				var next = stack.Pop();
+				yield return next;
+				foreach (var child in childSelector(next))
+					stack.Push(child);
 			}
 		}
 
