@@ -26,7 +26,7 @@ namespace Xamarin.Forms.Platform.iOS
 		{
 		}
 
-		protected IVisualElementRenderer VisualElementRenderer { get; private set; }
+		public IVisualElementRenderer VisualElementRenderer { get; private set; }
 
 		public override void ConstrainTo(CGSize constraint)
 		{
