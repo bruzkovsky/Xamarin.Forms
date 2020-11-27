@@ -12,7 +12,7 @@ namespace Xamarin.Forms.Platform.iOS
 	{
 		readonly UICollectionView _collectionView;
 		readonly UICollectionViewController _collectionViewController;
-		readonly IEnumerable _originalItemsSource;
+		readonly IList _originalItemsSource;
 		bool _disposed;
 		readonly List<IItemsViewSource> _groups = new List<IItemsViewSource>();
 
@@ -21,7 +21,7 @@ namespace Xamarin.Forms.Platform.iOS
 			_collectionViewController = collectionViewController;
 			_collectionView = _collectionViewController.CollectionView;
 			
-			_originalItemsSource = groupSource;
+			_originalItemsSource = groupSource as IList ?? new ListSource(groupSource);
 
 			if (_originalItemsSource is INotifyCollectionChanged incc)
 			{
@@ -31,13 +31,7 @@ namespace Xamarin.Forms.Platform.iOS
 			ResetGroups();
 		}
 
-		public object this[NSIndexPath indexPath]
-		{
-			get
-			{
-				return GetGroupItemAt(indexPath.Section, (int)indexPath.Item);
-			}
-		}
+		public object this[NSIndexPath indexPath] => _groups[indexPath.Section][indexPath];
 
 		public int GroupCount => _groups.Count;
 
@@ -59,7 +53,7 @@ namespace Xamarin.Forms.Platform.iOS
 			return NSIndexPath.Create(-1, -1);
 		}
 
-		public object Group(NSIndexPath indexPath) => _originalItemsSource.Cast<object>().ElementAt(indexPath.Section);
+		public object Group(NSIndexPath indexPath) => _originalItemsSource[indexPath.Section];
 
 		public int ItemCountInGroup(nint group) => _groups[(int)group].ItemCount;
 
@@ -107,17 +101,18 @@ namespace Xamarin.Forms.Platform.iOS
 				{
 					if (group is INotifyCollectionChanged)
 					{
-						_groups.Add(new ObservableItemsSource(list, _collectionViewController, index++));
+						_groups.Add(new ObservableItemsSource(list, _collectionViewController, index));
 					}
 					else
 					{
-						_groups.Add(new ListSource(list));
+						_groups.Add(new ListSource(list, index));
 					}
 				}
 				else
 				{
-					_groups.Add(new ListSource());
+					_groups.Add(new ListSource(index));
 				}
+				index++;
 			}
 		}
 
@@ -172,6 +167,7 @@ namespace Xamarin.Forms.Platform.iOS
 			// code source: https://stackoverflow.com/a/64146094/13005218
 			UIView.PerformWithoutAnimation(() =>
 			{
+				// [!] Do not use BatchUpdate here, it will cause concurrency problems
 				_collectionView.ReloadData();
 			});
 			_collectionView.CollectionViewLayout.InvalidateLayout();
@@ -199,14 +195,15 @@ namespace Xamarin.Forms.Platform.iOS
 
 			var startIndex = args.NewStartingIndex > -1
 				? args.NewStartingIndex
-				: _originalItemsSource.Cast<object>().ToList().IndexOf(args.NewItems[0]);
+				: _originalItemsSource.IndexOf(args.NewItems[0]);
 			var count = args.NewItems.Count;
 
 			// Adding a group will change the section index for all subsequent groups, so the easiest thing to do
 			// is to reset all the group tracking to get it up-to-date
 			ResetGroups();
 
-			// Queue up the updates to the UICollectionView
+			// apply the updates to the UICollectionView
+			// [!] Do not use BatchUpdate here, it will cause concurrency problems
 			_collectionView.InsertSections(CreateIndexSetFrom(startIndex, count));
 		}
 
@@ -229,7 +226,8 @@ namespace Xamarin.Forms.Platform.iOS
 			// Since we have a start index, we can be more clever about removing the item(s) (and get the nifty animations)
 			var count = args.OldItems.Count;
 
-			// Queue up the updates to the UICollectionView
+			// apply the updates to the UICollectionView
+			// [!] Do not use BatchUpdate here, it will cause concurrency problems
 			_collectionView.DeleteSections(CreateIndexSetFrom(startIndex, count));
 		}
 
@@ -243,9 +241,10 @@ namespace Xamarin.Forms.Platform.iOS
 
 				var startIndex = args.NewStartingIndex > -1
 					? args.NewStartingIndex
-					: _originalItemsSource.Cast<object>().ToList().IndexOf(args.NewItems[0]);
+					: _originalItemsSource.IndexOf(args.NewItems[0]);
 
 				// We are replacing one set of items with a set of equal size; we can do a simple item range update
+				// [!] Do not use BatchUpdate here, it will cause concurrency problems
 				_collectionView.ReloadSections(CreateIndexSetFrom(startIndex, newCount));
 				return;
 			}
@@ -264,6 +263,7 @@ namespace Xamarin.Forms.Platform.iOS
 			if (count == 1)
 			{
 				// For a single item, we can use MoveSection and get the animation
+				// [!] Do not use BatchUpdate here, it will cause concurrency problems
 				_collectionView.MoveSection(args.OldStartingIndex, args.NewStartingIndex);
 				return;
 			}
@@ -271,30 +271,8 @@ namespace Xamarin.Forms.Platform.iOS
 			var start = Math.Min(args.OldStartingIndex, args.NewStartingIndex);
 			var end = Math.Max(args.OldStartingIndex, args.NewStartingIndex) + count;
 
+			// [!] Do not use BatchUpdate here, it will cause concurrency problems
 			_collectionView.ReloadSections(CreateIndexSetFrom(start, end));
-		}
-
-		object GetGroupItemAt(int groupIndex, int index)
-		{
-			switch (_groups[groupIndex])
-			{
-				case IList list:
-					return list[index];
-				case IEnumerable enumerable:
-					var count = -1;
-					var enumerator = enumerable.GetEnumerator();
-
-					do
-					{
-						enumerator.MoveNext();
-						count += 1;
-					}
-					while (count < index);
-
-					return enumerator.Current;
-			}
-
-			return null;
 		}
 	}
 }
