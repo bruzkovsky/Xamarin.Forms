@@ -23,7 +23,6 @@ namespace Xamarin.Forms.Platform.iOS
 		{
 			_collectionViewController = collectionViewController;
 			_collectionView = _collectionViewController.CollectionView;
-			//_collectionView.BackgroundColor = UIColor.Blue;
 
 			_section = group < 0 ? 0 : group;
 			_grouped = group >= 0;
@@ -168,7 +167,6 @@ namespace Xamarin.Forms.Platform.iOS
 			{
 				_collectionView.ReloadData();
 			});
-			_collectionView.CollectionViewLayout.InvalidateLayout();
 		}
 
 		NSIndexPath[] CreateIndexesFrom(int startIndex, int count)
