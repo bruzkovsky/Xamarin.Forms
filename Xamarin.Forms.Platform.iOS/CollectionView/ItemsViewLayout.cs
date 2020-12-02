@@ -176,11 +176,6 @@ namespace Xamarin.Forms.Platform.iOS
 
 		protected void DetermineCellSize()
 		{
-			if (GetPrototype == null)
-			{
-				return;
-			}
-
 			// We set the EstimatedItemSize here for two reasons:
 			// 1. If we don't set it, iOS versions below 10 will crash
 			// 2. If GetPrototype() cannot return a cell because the items source is empty, we need to have
@@ -189,40 +184,49 @@ namespace Xamarin.Forms.Platform.iOS
 			// If GetPrototype() _can_ return a cell, this estimate will be updated once that cell is measured
 			EstimatedItemSize = new CGSize(1, 1);
 
-			ItemsViewCell prototype = null;
-
-			if (CollectionView?.VisibleCells.Length > 0)
-			{
-				prototype = CollectionView.VisibleCells[0] as ItemsViewCell;
-			}
-
-			if (prototype == null)
-			{
-				prototype = GetPrototype() as ItemsViewCell;
-			}
-
-			if (prototype == null)
-			{
-				return;
-			}
-
-			// Constrain and measure the prototype cell
-			prototype.ConstrainTo(ConstrainedDimension);
-			var measure = prototype.Measure();
-
 			if (ItemSizingStrategy == ItemSizingStrategy.MeasureFirstItem)
 			{
+				if (!TryGetPrototype(out ItemsViewCell prototype))
+					return;
+
+				// Constrain the prototype cell
+				prototype.ConstrainTo(ConstrainedDimension);
+
 				// This is the size we'll give all of our cells from here on out
-				ItemSize = measure;
+				ItemSize = prototype.Measure();
 
 				// Make sure autolayout is disabled 
 				EstimatedItemSize = CGSize.Empty;
 			}
 			else
 			{
-				// Autolayout is now enabled, and this is the size used to guess scrollbar size and progress
-				EstimatedItemSize = measure;
+				// set autosize (see: https://www.vadimbulavin.com/collection-view-cells-self-sizing/)
+				EstimatedItemSize = AutomaticSize;
 			}
+		}
+
+		bool TryGetPrototype(out ItemsViewCell prototype)
+		{
+			prototype = null;
+
+			if (GetPrototype == null)
+			{
+				return false;
+			}
+
+			if (CollectionView?.VisibleCells.Length > 0)
+			{
+				prototype = CollectionView.VisibleCells[0] as ItemsViewCell;
+				return true;
+			}
+
+			if (GetPrototype() is ItemsViewCell itemsViewCell)
+			{
+				prototype = itemsViewCell;
+				return true;
+			}
+
+			return false;
 		}
 
 		void Initialize(UICollectionViewScrollDirection scrollDirection)
